@@ -275,7 +275,7 @@ class LoginFormComponentState extends State<LoginFormComponent> {
             child: ElevatedButton(
               onPressed: _validateLoginDetails,
               style: ElevatedButton.styleFrom(
-                primary: Colors.transparent,
+                backgroundColor: Colors.transparent,
                 shadowColor: Colors.transparent,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),

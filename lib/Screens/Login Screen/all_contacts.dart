@@ -110,7 +110,7 @@ class _AllContactsScreenState extends State<AllContactsScreen> {
                     // future: getData(
                     //     urlPath: "/hadwin/v3/all-contacts",
                     //     authKey: widget.userAuthKey),
-                    builder: buildContacts),
+                    builder: buildContacts, future: null,),
               ),
             )
           ],

@@ -222,7 +222,7 @@ class _SignUpStepsState extends State<SignUpSteps> {
                     child: ElevatedButton(
                         onPressed: _finalStepProccessing,
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.transparent,
+                          backgroundColor: Colors.transparent,
                           shadowColor: Colors.transparent,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20)),
@@ -244,8 +244,7 @@ class _SignUpStepsState extends State<SignUpSteps> {
                           child: TextButton(
                               onPressed: _goBackToPreviousStep,
                               style: TextButton.styleFrom(
-                                primary: Colors.transparent,
-                                shadowColor: Colors.transparent,
+                                foregroundColor: Colors.transparent, shadowColor: Colors.transparent,
                                 elevation: 0,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20)),
@@ -276,8 +275,7 @@ class _SignUpStepsState extends State<SignUpSteps> {
                           child: TextButton(
                               onPressed: _proceedToNextStep,
                               style: TextButton.styleFrom(
-                                primary: Colors.transparent,
-                                shadowColor: Colors.transparent,
+                                foregroundColor: Colors.transparent, shadowColor: Colors.transparent,
                                 elevation: 0,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20)),

@@ -364,7 +364,7 @@ class _ListBuilder_screenState extends State<ListBuilder_screen> {
                     });
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: lookuprequirementlib ? Colors.red : Colors.green,
+                    backgroundColor: lookuprequirementlib ? Colors.red : Colors.green,
                     textStyle: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,

@@ -58,7 +58,7 @@ void showErrorAlert(BuildContext context, Map<String, dynamic> error) {
                     onPressed: errorTypes[currentError].onClose,
                     child: Text('OK'),
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.transparent,
+                      backgroundColor: Colors.transparent,
                       shadowColor: Colors.transparent,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
