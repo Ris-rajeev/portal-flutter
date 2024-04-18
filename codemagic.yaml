@@ -1,42 +1,31 @@
 workflows:
-  ios-native-workflow:
-    name: iOS Native
+  native-android:
+    name: Native Android
     max_build_duration: 120
     instance_type: mac_mini_m1
-    integrations:
-      app_store_connect: codemagic
     environment:
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: io.codemagic.sample.iosnative
+      android_signing:
+        - keystore_reference
+      groups:
+        - google_play
       vars:
-        BUNDLE_ID: "io.codemagic.sample.iosnative"
-        XCODE_WORKSPACE: "Runner.xcodeproj" # <-- Put the name of your Xcode workspace here
-        XCODE_SCHEME: "Runner" # <-- Put the name of your Xcode scheme here
-        APP_STORE_APPLE_ID: 1555555551
-      xcode: latest
-      cocoapods: default
+        PACKAGE_NAME: "io.codemagic.sample.androidnative"
     scripts:
-      - name: Install CocoaPods dependencies
+      - name: Set Android SDK location
         script: |
-          pod install
-      - name: Set up provisioning profiles settings on Xcode project
-        script: xcode-project use-profiles
-      - name: Increment build number
+          echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/local.properties"
+      - name: Build Android release
         script: |
-          cd $CM_BUILD_DIR
-          LATEST_BUILD_NUMBER=$(app-store-connect get-latest-app-store-build-number "$APP_STORE_APPLE_ID")
-          agvtool new-version -all $(($LATEST_BUILD_NUMBER + 1))
-      - name: Build ipa for distribution
-        script: |
-          xcode-project build-ipa \
-            --workspace "$CM_BUILD_DIR/$XCODE_WORKSPACE" \
-            --scheme "$XCODE_SCHEME"
+          LATEST_GOOGLE_PLAY_BUILD_NUMBER=$(google-play get-latest-build-number --package-name "$PACKAGE_NAME")
+          if [ -z $LATEST_GOOGLE_PLAY_BUILD_NUMBER ]; then
+              # fallback in case no build number was found from google play. Alternatively, you can `exit 1` to fail the build
+              UPDATED_BUILD_NUMBER=$BUILD_NUMBER
+          else
+              UPDATED_BUILD_NUMBER=$(($LATEST_GOOGLE_PLAY_BUILD_NUMBER + 1))
+          fi
+          ./gradlew bundleRelease -PversionCode=$UPDATED_BUILD_NUMBER -PversionName=1.0.$UPDATED_BUILD_NUMBER
     artifacts:
-      - build/ios/ipa/*.ipa
-      - /tmp/xcodebuild_logs/*.log
-      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
-      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+      - app/build/outputs/**/*.aab
     publishing:
       email:
         recipients:
@@ -45,16 +34,7 @@ workflows:
         notify:
           success: true
           failure: false
-      app_store_connect:
-        auth: integration
-
-        # Configuration related to TestFlight (optional)
-        # Note: This action is performed during post-processing.
-        submit_to_testflight: true
-        beta_groups: # Specify the names of beta tester groups that will get access to the build once it has passed beta review.
-          - group name 1
-          - group name 2
-
-        # Configuration related to App Store (optional)
-        # Note: This action is performed during post-processing.
-        submit_to_app_store: false
+      google_play:
+        credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
+        track: internal
+        submit_as_draft: true
